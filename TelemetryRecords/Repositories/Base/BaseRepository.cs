@@ -11,6 +11,7 @@ namespace TelemetryRecords.Repositories.Base
         protected readonly IMongoCollection<T> _collection;
 
         protected abstract string CollectionName { get; }
+        protected abstract string TimestampFieldName { get; }
 
         protected BaseRepository(IMongoClient mongoClient, IOptions<MongoDbConfiguration> mongoDbConfig)
         {
@@ -20,11 +21,11 @@ namespace TelemetryRecords.Repositories.Base
 
         public virtual async Task<T?> GetLatestAsync(CancellationToken cancellationToken = default)
         {
-            SortDefinition<T> sortByCreatedAtDesc = Builders<T>.Sort.Descending(TelemetryRecordsConstants.Fields.CREATED_AT);
+            SortDefinition<T> sortByTimestampDesc = Builders<T>.Sort.Descending(TimestampFieldName);
 
             return await _collection
                 .Find(FilterDefinition<T>.Empty)
-                .Sort(sortByCreatedAtDesc)
+                .Sort(sortByTimestampDesc)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
@@ -34,8 +35,8 @@ namespace TelemetryRecords.Repositories.Base
             DateTime endOfDay = startOfDay.AddDays(1);
 
             FilterDefinition<T> dateFilter = Builders<T>.Filter.And(
-                Builders<T>.Filter.Gte(TelemetryRecordsConstants.Fields.CREATED_AT, startOfDay),
-                Builders<T>.Filter.Lt(TelemetryRecordsConstants.Fields.CREATED_AT, endOfDay)
+                Builders<T>.Filter.Gte(TimestampFieldName, startOfDay),
+                Builders<T>.Filter.Lt(TimestampFieldName, endOfDay)
             );
 
             return await _collection.Find(dateFilter).ToListAsync(cancellationToken);

@@ -27,10 +27,15 @@ namespace TelemetryRecords.Controllers
             return Ok(assignment);
         }
 
-        [HttpGet("by-date/{date:datetime}")]
-        public async Task<ActionResult<IEnumerable<AssignmentRo>>> GetByDate(DateTime date, CancellationToken cancellationToken)
+        [HttpGet("by-date/{date}")]
+        public async Task<ActionResult<IEnumerable<AssignmentRo>>> GetByDate(string date, CancellationToken cancellationToken)
         {
-            IEnumerable<AssignmentRo> assignments = await _assignmentService.GetAssignmentsByDateAsync(date, cancellationToken);
+            if (!DateTime.TryParse(date, out DateTime parsedDate))
+            {
+                return BadRequest(TelemetryRecordsConstants.ErrorMessages.INVALID_DATE_FORMAT);
+            }
+
+            IEnumerable<AssignmentRo> assignments = await _assignmentService.GetAssignmentsByDateAsync(parsedDate, cancellationToken);
             return Ok(assignments);
         }
     }

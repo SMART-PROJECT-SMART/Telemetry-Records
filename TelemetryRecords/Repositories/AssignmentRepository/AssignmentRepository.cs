@@ -11,6 +11,7 @@ namespace TelemetryRecords.Repositories.AssignmentRepository
     public class AssignmentRepository : BaseRepository<Assignment>, IAssignmentRepository
     {
         protected override string CollectionName => TelemetryRecordsConstants.Collections.ASSIGNMENTS_COLLECTION;
+        protected override string TimestampFieldName => TelemetryRecordsConstants.Fields.CREATED_AT;
 
         public AssignmentRepository(IMongoClient mongoClient, IOptions<MongoDbConfiguration> mongoDbConfig)
             : base(mongoClient, mongoDbConfig)
