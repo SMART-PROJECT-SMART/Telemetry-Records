@@ -5,7 +5,7 @@ namespace TelemetryRecords.Models
     public class MissionToUavAssignment
     {
         [BsonRequired]
-        public Mission Mission { get; set; }
+        public required Mission Mission { get; set; }
 
         [BsonRequired]
         public int UavTailId { get; set; }

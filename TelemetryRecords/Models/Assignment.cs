@@ -15,6 +15,6 @@ namespace TelemetryRecords.Models
         [BsonRequired]
         public List<MissionToUavAssignment> ActualAssignments { get; set; } = new();
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; }
     }
 }
