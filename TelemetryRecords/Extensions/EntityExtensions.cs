@@ -23,7 +23,8 @@ namespace TelemetryRecords.Extensions
             {
                 Mission = missionToUavAssignment.Mission.ToRo(),
                 UavTailId = missionToUavAssignment.UavTailId,
-                StartTime = missionToUavAssignment.StartTime
+                StartTime = missionToUavAssignment.StartTime,
+                UavTelemetrySnapshot = missionToUavAssignment.UavTelemetrySnapshot
             };
         }
 

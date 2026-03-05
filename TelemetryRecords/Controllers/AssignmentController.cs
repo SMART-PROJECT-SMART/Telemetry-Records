@@ -7,11 +7,11 @@ namespace TelemetryRecords.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AssignmentController : ControllerBase
+    public class AssignmentRecordsController : ControllerBase
     {
         private readonly IAssignmentService _assignmentService;
 
-        public AssignmentController(IAssignmentService assignmentService)
+        public AssignmentRecordsController(IAssignmentService assignmentService)
         {
             _assignmentService = assignmentService;
         }
@@ -19,7 +19,9 @@ namespace TelemetryRecords.Controllers
         [HttpGet("latest")]
         public async Task<ActionResult<AssignmentRo>> GetLatest(CancellationToken cancellationToken)
         {
-            AssignmentRo? assignment = await _assignmentService.GetLatestAssignmentAsync(cancellationToken);
+            AssignmentRo? assignment = await _assignmentService.GetLatestAssignmentAsync(
+                cancellationToken
+            );
             if (assignment == null)
             {
                 return NotFound(TelemetryRecordsConstants.ErrorMessages.ASSIGNMENT_NOT_FOUND);
@@ -28,14 +30,18 @@ namespace TelemetryRecords.Controllers
         }
 
         [HttpGet("by-date/{date}")]
-        public async Task<ActionResult<IEnumerable<AssignmentRo>>> GetByDate(string date, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<AssignmentRo>>> GetByDate(
+            string date,
+            CancellationToken cancellationToken
+        )
         {
             if (!DateTime.TryParse(date, out DateTime parsedDate))
             {
                 return BadRequest(TelemetryRecordsConstants.ErrorMessages.INVALID_DATE_FORMAT);
             }
 
-            IEnumerable<AssignmentRo> assignments = await _assignmentService.GetAssignmentsByDateAsync(parsedDate, cancellationToken);
+            IEnumerable<AssignmentRo> assignments =
+                await _assignmentService.GetAssignmentsByDateAsync(parsedDate, cancellationToken);
             return Ok(assignments);
         }
     }

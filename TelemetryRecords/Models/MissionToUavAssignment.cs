@@ -1,3 +1,4 @@
+using Core.Common.Enums;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace TelemetryRecords.Models
@@ -12,5 +13,7 @@ namespace TelemetryRecords.Models
 
         [BsonRequired]
         public DateTime StartTime { get; set; }
+
+        public Dictionary<TelemetryFields, double> UavTelemetrySnapshot { get; set; } = new();
     }
 }
