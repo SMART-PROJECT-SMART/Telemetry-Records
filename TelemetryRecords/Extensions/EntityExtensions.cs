@@ -34,6 +34,7 @@ namespace TelemetryRecords.Extensions
             {
                 SuggestedAssignments = assignment.SuggestedAssignments.Select(x => x.ToRo()).ToList(),
                 ActualAssignments = assignment.ActualAssignments.Select(x => x.ToRo()).ToList(),
+                AllUavTelemetryData = assignment.AllUavTelemetryData,
                 CreatedAt = assignment.CreatedAt
             };
         }
