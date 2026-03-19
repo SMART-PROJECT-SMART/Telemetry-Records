@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using TelemetryRecords.Models;
 using TelemetryRecords.Models.Ro;
 
@@ -43,6 +44,33 @@ namespace TelemetryRecords.Extensions
         public static IEnumerable<AssignmentRo> ToRo(this IEnumerable<Assignment> assignments)
         {
             return assignments.Select(x => x.ToRo());
+        }
+
+        public static MissionTelemetryRo ToRo(this TelemetryDataPoint dataPoint)
+        {
+            Dictionary<string, double> fields = new Dictionary<string, double>();
+
+            foreach (BsonElement element in dataPoint.TelemetryData)
+            {
+                if (element.Value.IsDouble)
+                    fields[element.Name] = element.Value.AsDouble;
+                else if (element.Value.IsInt32)
+                    fields[element.Name] = element.Value.AsInt32;
+                else if (element.Value.IsInt64)
+                    fields[element.Name] = element.Value.AsInt64;
+            }
+
+            return new MissionTelemetryRo
+            {
+                Timestamp = dataPoint.Timestamp,
+                TailId = dataPoint.TailId,
+                Fields = fields
+            };
+        }
+
+        public static List<MissionTelemetryRo> ToRo(this List<TelemetryDataPoint> dataPoints)
+        {
+            return dataPoints.Select(x => x.ToRo()).ToList();
         }
     }
 }
