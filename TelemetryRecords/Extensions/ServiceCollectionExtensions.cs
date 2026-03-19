@@ -3,8 +3,12 @@ using TelemetryRecords.Common.Constants;
 using TelemetryRecords.Models.Config;
 using TelemetryRecords.Repositories.AssignmentRepository;
 using TelemetryRecords.Repositories.AssignmentRepository.Interfaces;
+using TelemetryRecords.Repositories.TelemetryDataRepository;
+using TelemetryRecords.Repositories.TelemetryDataRepository.Interfaces;
 using TelemetryRecords.Services.AssignmentService;
 using TelemetryRecords.Services.AssignmentService.Interfaces;
+using TelemetryRecords.Services.TelemetryDataService;
+using TelemetryRecords.Services.TelemetryDataService.Interfaces;
 
 namespace TelemetryRecords.Extensions
 {
@@ -41,6 +45,8 @@ namespace TelemetryRecords.Extensions
         {
             services.AddScoped<IAssignmentRepository, AssignmentRepository>();
             services.AddScoped<IAssignmentService, AssignmentService>();
+            services.AddScoped<ITelemetryDataRepository, TelemetryDataRepository>();
+            services.AddScoped<ITelemetryDataService, TelemetryDataService>();
             return services;
         }
     }
