@@ -9,6 +9,7 @@ namespace TelemetryRecords.Extensions
         {
             return new MissionRo
             {
+                Id = mission.Id,
                 Title = mission.Title,
                 RequiredUAVType = mission.RequiredUAVType,
                 Priority = mission.Priority,
