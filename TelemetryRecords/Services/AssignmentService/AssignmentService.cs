@@ -26,5 +26,17 @@ namespace TelemetryRecords.Services.AssignmentService
             IEnumerable<Assignment> assignments = await _assignmentRepository.GetByDateAsync(date, cancellationToken);
             return assignments.ToRo();
         }
+
+        public async Task<MissionRo?> GetMissionByIdAsync(string missionId, CancellationToken cancellationToken = default)
+        {
+            Assignment? assignment = await _assignmentRepository.FindLatestContainingMissionIdAsync(missionId, cancellationToken);
+            if (assignment == null) return null;
+
+            MissionToUavAssignment? match =
+                assignment.ActualAssignments.FirstOrDefault(a => a.Mission.Id == missionId)
+                ?? assignment.SuggestedAssignments.FirstOrDefault(a => a.Mission.Id == missionId);
+
+            return match?.Mission.ToRo();
+        }
     }
 }

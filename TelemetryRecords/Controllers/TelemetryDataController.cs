@@ -20,17 +20,22 @@ namespace TelemetryRecords.Controllers
         public async Task<ActionResult<List<MissionTelemetryRo>>> GetByMission(
             [FromQuery] string missionId,
             [FromQuery] int tailId,
-            [FromQuery] DateTime startTime,
-            [FromQuery] DateTime endTime,
-            CancellationToken cancellationToken)
+            [FromQuery] string? fields = null,
+            [FromQuery] DateTime? startTime = null,
+            [FromQuery] DateTime? endTime = null,
+            CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrEmpty(missionId))
             {
                 return BadRequest(TelemetryRecordsConstants.ErrorMessages.MISSION_ID_REQUIRED);
             }
 
+            List<string>? fieldList = !string.IsNullOrWhiteSpace(fields)
+                ? fields.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList()
+                : null;
+
             List<MissionTelemetryRo> telemetry = await _telemetryDataService.GetMissionTelemetryAsync(
-                missionId, tailId, startTime, endTime, cancellationToken);
+                missionId, tailId, fieldList, startTime, endTime, cancellationToken);
 
             return Ok(telemetry);
         }

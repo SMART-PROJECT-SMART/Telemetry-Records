@@ -17,5 +17,31 @@ namespace TelemetryRecords.Repositories.AssignmentRepository
             : base(mongoClient, mongoDbConfig)
         {
         }
+
+        public async Task<Assignment?> FindLatestContainingMissionIdAsync(
+            string missionId, CancellationToken cancellationToken = default)
+        {
+            FilterDefinition<Assignment> suggestedMatch =
+                Builders<Assignment>.Filter.ElemMatch(
+                    a => a.SuggestedAssignments,
+                    Builders<MissionToUavAssignment>.Filter.Eq(m => m.Mission.Id, missionId));
+
+            FilterDefinition<Assignment> actualMatch =
+                Builders<Assignment>.Filter.ElemMatch(
+                    a => a.ActualAssignments,
+                    Builders<MissionToUavAssignment>.Filter.Eq(m => m.Mission.Id, missionId));
+
+            FilterDefinition<Assignment> filter =
+                Builders<Assignment>.Filter.Or(suggestedMatch, actualMatch);
+
+            SortDefinition<Assignment> sort =
+                Builders<Assignment>.Sort.Descending(TimestampFieldName);
+
+            return await _collection
+                .Find(filter)
+                .Sort(sort)
+                .Limit(1)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

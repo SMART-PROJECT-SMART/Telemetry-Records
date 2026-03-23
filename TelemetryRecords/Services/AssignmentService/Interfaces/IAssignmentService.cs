@@ -6,5 +6,6 @@ namespace TelemetryRecords.Services.AssignmentService.Interfaces
     {
         Task<AssignmentRo?> GetLatestAssignmentAsync(CancellationToken cancellationToken = default);
         Task<IEnumerable<AssignmentRo>> GetAssignmentsByDateAsync(DateTime date, CancellationToken cancellationToken = default);
+        Task<MissionRo?> GetMissionByIdAsync(string missionId, CancellationToken cancellationToken = default);
     }
 }

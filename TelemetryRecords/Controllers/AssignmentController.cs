@@ -44,5 +44,24 @@ namespace TelemetryRecords.Controllers
                 await _assignmentService.GetAssignmentsByDateAsync(parsedDate, cancellationToken);
             return Ok(assignments);
         }
+
+        [HttpGet("by-mission/{missionId}")]
+        public async Task<ActionResult<MissionRo>> GetByMission(
+            string missionId,
+            CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(missionId))
+            {
+                return BadRequest(TelemetryRecordsConstants.ErrorMessages.MISSION_ID_REQUIRED);
+            }
+
+            MissionRo? mission = await _assignmentService.GetMissionByIdAsync(missionId, cancellationToken);
+            if (mission == null)
+            {
+                return NotFound(TelemetryRecordsConstants.ErrorMessages.MISSION_NOT_FOUND);
+            }
+
+            return Ok(mission);
+        }
     }
 }

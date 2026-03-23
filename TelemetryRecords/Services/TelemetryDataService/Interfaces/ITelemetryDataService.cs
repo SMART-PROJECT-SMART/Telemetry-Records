@@ -7,8 +7,9 @@ namespace TelemetryRecords.Services.TelemetryDataService.Interfaces
         Task<List<MissionTelemetryRo>> GetMissionTelemetryAsync(
             string missionId,
             int tailId,
-            DateTime startTime,
-            DateTime endTime,
+            List<string>? fields = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
             CancellationToken cancellationToken = default);
     }
 }

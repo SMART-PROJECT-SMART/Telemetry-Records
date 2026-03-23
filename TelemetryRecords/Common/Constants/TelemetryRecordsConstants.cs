@@ -25,6 +25,7 @@ namespace TelemetryRecords.Common.Constants
             public const string ASSIGNMENT_NOT_FOUND_FOR_DATE = "No assignment found for date {0}.";
             public const string INVALID_DATE_FORMAT = "Invalid date format. Use yyyy-MM-dd.";
             public const string MISSION_ID_REQUIRED = "Mission ID is required.";
+            public const string MISSION_NOT_FOUND = "No mission found for the given ID.";
         }
     }
 }

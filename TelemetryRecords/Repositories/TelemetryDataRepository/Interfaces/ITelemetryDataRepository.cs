@@ -8,8 +8,9 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository.Interfaces
         Task<List<TelemetryDataPoint>> GetByMissionAsync(
             double missionIdHash,
             int tailId,
-            DateTime startTime,
-            DateTime endTime,
+            List<string>? fields = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
             CancellationToken cancellationToken = default);
     }
 }

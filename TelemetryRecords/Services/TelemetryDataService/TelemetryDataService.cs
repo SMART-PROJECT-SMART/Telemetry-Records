@@ -19,14 +19,15 @@ namespace TelemetryRecords.Services.TelemetryDataService
         public async Task<List<MissionTelemetryRo>> GetMissionTelemetryAsync(
             string missionId,
             int tailId,
-            DateTime startTime,
-            DateTime endTime,
+            List<string>? fields = null,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
             CancellationToken cancellationToken = default)
         {
             double missionIdHash = MissionIdHashUtility.ToHash(missionId);
 
             List<TelemetryDataPoint> dataPoints = await _telemetryDataRepository.GetByMissionAsync(
-                missionIdHash, tailId, startTime, endTime, cancellationToken);
+                missionIdHash, tailId, fields, startTime, endTime, cancellationToken);
 
             return dataPoints.ToRo();
         }
