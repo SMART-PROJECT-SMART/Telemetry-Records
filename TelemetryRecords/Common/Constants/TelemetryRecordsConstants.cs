@@ -17,6 +17,8 @@ namespace TelemetryRecords.Common.Constants
         {
             public const string CREATED_AT = "CreatedAt";
             public const string TIMESTAMP = "Timestamp";
+            public const string TELEMETRY_DATA_PREFIX = "TelemetryData";
+            public const string MISSION_ID_PATH = $"{TELEMETRY_DATA_PREFIX}.MissionId";
         }
 
         public static class ErrorMessages

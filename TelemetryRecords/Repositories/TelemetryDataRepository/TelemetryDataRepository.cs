@@ -26,39 +26,50 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository
             DateTime? endTime = null,
             CancellationToken cancellationToken = default)
         {
-            var filters = new List<FilterDefinition<TelemetryDataPoint>>
-            {
-                Builders<TelemetryDataPoint>.Filter.Eq(x => x.TailId, tailId),
-                Builders<TelemetryDataPoint>.Filter.Eq("TelemetryData.MissionId", missionIdHash)
-            };
+            FilterDefinition<TelemetryDataPoint> filter = BuildMissionFilter(missionIdHash, tailId, startTime, endTime);
 
-            if (startTime.HasValue)
-                filters.Add(Builders<TelemetryDataPoint>.Filter.Gte(x => x.Timestamp, startTime.Value));
-
-            if (endTime.HasValue)
-                filters.Add(Builders<TelemetryDataPoint>.Filter.Lt(x => x.Timestamp, endTime.Value));
-
-            FilterDefinition<TelemetryDataPoint> filter = Builders<TelemetryDataPoint>.Filter.And(filters);
-
-            SortDefinition<TelemetryDataPoint> sort =
-                Builders<TelemetryDataPoint>.Sort.Ascending(x => x.Timestamp);
-
-            IFindFluent<TelemetryDataPoint, TelemetryDataPoint> query = _collection.Find(filter).Sort(sort);
+            IFindFluent<TelemetryDataPoint, TelemetryDataPoint> query = _collection
+                .Find(filter)
+                .Sort(Builders<TelemetryDataPoint>.Sort.Ascending(x => x.Timestamp));
 
             if (fields is { Count: > 0 })
-            {
-                ProjectionDefinitionBuilder<TelemetryDataPoint> projBuilder = Builders<TelemetryDataPoint>.Projection;
-                ProjectionDefinition<TelemetryDataPoint> projection = projBuilder
-                    .Include(x => x.TailId)
-                    .Include(x => x.Timestamp);
-
-                foreach (string field in fields)
-                    projection = projection.Include($"TelemetryData.{field}");
-
-                query = query.Project<TelemetryDataPoint>(projection);
-            }
+                query = query.Project<TelemetryDataPoint>(BuildFieldProjection(fields));
 
             return await query.ToListAsync(cancellationToken);
+        }
+
+        private static FilterDefinition<TelemetryDataPoint> BuildMissionFilter(
+            double missionIdHash,
+            int tailId,
+            DateTime? startTime,
+            DateTime? endTime)
+        {
+            FilterDefinitionBuilder<TelemetryDataPoint> fb = Builders<TelemetryDataPoint>.Filter;
+
+            FilterDefinition<TelemetryDataPoint> filter = fb.And(
+                fb.Eq(x => x.TailId, tailId),
+                fb.Eq(TelemetryRecordsConstants.Fields.MISSION_ID_PATH, missionIdHash));
+
+            if (startTime.HasValue)
+                filter &= fb.Gte(x => x.Timestamp, startTime.Value);
+
+            if (endTime.HasValue)
+                filter &= fb.Lt(x => x.Timestamp, endTime.Value);
+
+            return filter;
+        }
+
+        private static ProjectionDefinition<TelemetryDataPoint> BuildFieldProjection(List<string> fields)
+        {
+            ProjectionDefinition<TelemetryDataPoint> projection = Builders<TelemetryDataPoint>.Projection
+                .Include(x => x.TailId)
+                .Include(x => x.Timestamp);
+
+            foreach (string field in fields)
+                projection = projection.Include(
+                    $"{TelemetryRecordsConstants.Fields.TELEMETRY_DATA_PREFIX}.{field}");
+
+            return projection;
         }
     }
 }
