@@ -28,6 +28,13 @@ namespace TelemetryRecords.Common.Constants
             public const string INVALID_DATE_FORMAT = "Invalid date format. Use yyyy-MM-dd.";
             public const string MISSION_ID_REQUIRED = "Mission ID is required.";
             public const string MISSION_NOT_FOUND = "No mission found for the given ID.";
+            public const string TELEMETRY_PAGE_INVALID = "Page must be zero or greater.";
+            public const string TELEMETRY_PAGE_SIZE_INVALID = "Page size must be between zero and the maximum allowed.";
+        }
+
+        public static class TelemetryQueryLimits
+        {
+            public const int MaxPageSize = 2000;
         }
     }
 }

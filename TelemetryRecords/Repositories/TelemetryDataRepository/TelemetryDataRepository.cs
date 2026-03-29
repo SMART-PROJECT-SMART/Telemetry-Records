@@ -18,12 +18,25 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository
         {
         }
 
+        public async Task<long> CountByMissionAsync(
+            double missionIdHash,
+            int tailId,
+            DateTime? startTime = null,
+            DateTime? endTime = null,
+            CancellationToken cancellationToken = default)
+        {
+            FilterDefinition<TelemetryDataPoint> filter = BuildMissionFilter(missionIdHash, tailId, startTime, endTime);
+            return await _collection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
+        }
+
         public async Task<List<TelemetryDataPoint>> GetByMissionAsync(
             double missionIdHash,
             int tailId,
             List<string>? fields = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
+            int skip = 0,
+            int take = 0,
             CancellationToken cancellationToken = default)
         {
             FilterDefinition<TelemetryDataPoint> filter = BuildMissionFilter(missionIdHash, tailId, startTime, endTime);
@@ -34,6 +47,12 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository
 
             if (fields is { Count: > 0 })
                 query = query.Project<TelemetryDataPoint>(BuildFieldProjection(fields));
+
+            if (skip > 0)
+                query = query.Skip(skip);
+
+            if (take > 0)
+                query = query.Limit(take);
 
             return await query.ToListAsync(cancellationToken);
         }

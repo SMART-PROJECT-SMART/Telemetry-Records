@@ -4,12 +4,14 @@ namespace TelemetryRecords.Services.TelemetryDataService.Interfaces
 {
     public interface ITelemetryDataService
     {
-        Task<List<MissionTelemetryRo>> GetMissionTelemetryAsync(
+        Task<MissionTelemetryPageRo> GetMissionTelemetryAsync(
             string missionId,
             int tailId,
             List<string>? fields = null,
             DateTime? startTime = null,
             DateTime? endTime = null,
+            int page = 0,
+            int pageSize = 0,
             CancellationToken cancellationToken = default);
     }
 }
