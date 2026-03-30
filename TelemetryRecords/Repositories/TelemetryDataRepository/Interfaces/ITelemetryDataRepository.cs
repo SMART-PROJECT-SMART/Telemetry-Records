@@ -5,6 +5,11 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository.Interfaces
 {
     public interface ITelemetryDataRepository : IRepository<TelemetryDataPoint>
     {
+        Task<MissionTelemetryTimeBounds> GetMissionTelemetryTimeBoundsAsync(
+            double missionIdHash,
+            int tailId,
+            CancellationToken cancellationToken = default);
+
         Task<long> CountByMissionAsync(
             double missionIdHash,
             int tailId,

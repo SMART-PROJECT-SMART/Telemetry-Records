@@ -41,5 +41,10 @@ namespace TelemetryRecords.Common.Constants
         {
             public const char FieldListSeparator = ',';
         }
+
+        public static class TelemetryAggregation
+        {
+            public const bool GroupAllDocumentsKey = true;
+        }
     }
 }

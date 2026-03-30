@@ -78,5 +78,33 @@ namespace TelemetryRecords.Services.TelemetryDataService
                 TotalCount = totalCount,
             };
         }
+
+        public async Task<MissionTelemetryBoundsRo> GetMissionTelemetryBoundsAsync(
+            string missionId,
+            int tailId,
+            CancellationToken cancellationToken = default)
+        {
+            double missionIdHash = MissionIdHashUtility.ToHash(missionId);
+            MissionTelemetryTimeBounds bounds = await _telemetryDataRepository.GetMissionTelemetryTimeBoundsAsync(
+                missionIdHash,
+                tailId,
+                cancellationToken);
+            return MapToBoundsResponse(bounds);
+        }
+
+        private static MissionTelemetryBoundsRo MapToBoundsResponse(MissionTelemetryTimeBounds bounds)
+        {
+            if (bounds.TotalCount == 0)
+            {
+                return new MissionTelemetryBoundsRo { TotalCount = 0 };
+            }
+
+            return new MissionTelemetryBoundsRo
+            {
+                FirstTimestamp = bounds.FirstTimestamp,
+                LastTimestamp = bounds.LastTimestamp,
+                TotalCount = bounds.TotalCount,
+            };
+        }
     }
 }

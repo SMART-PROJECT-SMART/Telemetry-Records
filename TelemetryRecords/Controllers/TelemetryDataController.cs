@@ -60,5 +60,24 @@ namespace TelemetryRecords.Controllers
 
             return Ok(pageResult);
         }
+
+        [HttpGet("bounds")]
+        public async Task<ActionResult<MissionTelemetryBoundsRo>> GetBounds(
+            [FromQuery] string missionId,
+            [FromQuery] int tailId,
+            CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrEmpty(missionId))
+            {
+                return BadRequest(TelemetryRecordsConstants.ErrorMessages.MISSION_ID_REQUIRED);
+            }
+
+            MissionTelemetryBoundsRo bounds = await _telemetryDataService.GetMissionTelemetryBoundsAsync(
+                missionId,
+                tailId,
+                cancellationToken);
+
+            return Ok(bounds);
+        }
     }
 }

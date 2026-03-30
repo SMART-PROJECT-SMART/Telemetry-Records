@@ -73,9 +73,36 @@ namespace TelemetryRecords.Repositories.TelemetryDataRepository
                 filter &= fb.Gte(x => x.Timestamp, startTime.Value);
 
             if (endTime.HasValue)
-                filter &= fb.Lt(x => x.Timestamp, endTime.Value);
+                filter &= fb.Lte(x => x.Timestamp, endTime.Value);
 
             return filter;
+        }
+
+        public async Task<MissionTelemetryTimeBounds> GetMissionTelemetryTimeBoundsAsync(
+            double missionIdHash,
+            int tailId,
+            CancellationToken cancellationToken = default)
+        {
+            FilterDefinition<TelemetryDataPoint> filter = BuildMissionFilter(missionIdHash, tailId, null, null);
+
+            MissionTelemetryTimeBounds? row = await _collection.Aggregate()
+                .Match(filter)
+                .Group(
+                    _ => TelemetryRecordsConstants.TelemetryAggregation.GroupAllDocumentsKey,
+                    g => new MissionTelemetryTimeBounds
+                    {
+                        FirstTimestamp = g.Min(x => x.Timestamp),
+                        LastTimestamp = g.Max(x => x.Timestamp),
+                        TotalCount = g.Count(),
+                    })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (row is null || row.TotalCount == 0)
+            {
+                return MissionTelemetryTimeBounds.Empty;
+            }
+
+            return row;
         }
 
         private static ProjectionDefinition<TelemetryDataPoint> BuildFieldProjection(List<string> fields)

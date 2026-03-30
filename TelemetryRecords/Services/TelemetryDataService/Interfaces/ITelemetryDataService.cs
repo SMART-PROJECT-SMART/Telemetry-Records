@@ -13,5 +13,10 @@ namespace TelemetryRecords.Services.TelemetryDataService.Interfaces
             int page = 0,
             int pageSize = 0,
             CancellationToken cancellationToken = default);
+
+        Task<MissionTelemetryBoundsRo> GetMissionTelemetryBoundsAsync(
+            string missionId,
+            int tailId,
+            CancellationToken cancellationToken = default);
     }
 }
