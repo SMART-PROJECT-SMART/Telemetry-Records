@@ -43,7 +43,9 @@ namespace TelemetryRecords.Controllers
             }
 
             List<string>? fieldList = !string.IsNullOrWhiteSpace(fields)
-                ? fields.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList()
+                ? fields.Split(
+                    TelemetryRecordsConstants.TelemetryQuery.FieldListSeparator,
+                    StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList()
                 : null;
 
             MissionTelemetryPageRo pageResult = await _telemetryDataService.GetMissionTelemetryAsync(

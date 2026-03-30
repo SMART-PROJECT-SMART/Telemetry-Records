@@ -44,19 +44,20 @@ namespace TelemetryRecords.Services.TelemetryDataService
                 return new MissionTelemetryPageRo
                 {
                     Items = allRos,
-                    TotalCount = allRos.Count,
+                    TotalCount = (long)allRos.Count,
                 };
             }
 
-            long totalCount = await _telemetryDataRepository.CountByMissionAsync(
+            int skip = page * pageSize;
+
+            Task<long> countTask = _telemetryDataRepository.CountByMissionAsync(
                 missionIdHash,
                 tailId,
                 startTime,
                 endTime,
                 cancellationToken);
 
-            int skip = page * pageSize;
-            List<TelemetryDataPoint> pagePoints = await _telemetryDataRepository.GetByMissionAsync(
+            Task<List<TelemetryDataPoint>> pageTask = _telemetryDataRepository.GetByMissionAsync(
                 missionIdHash,
                 tailId,
                 fields,
@@ -65,6 +66,11 @@ namespace TelemetryRecords.Services.TelemetryDataService
                 skip,
                 pageSize,
                 cancellationToken);
+
+            await Task.WhenAll(countTask, pageTask);
+
+            long totalCount = await countTask;
+            List<TelemetryDataPoint> pagePoints = await pageTask;
 
             return new MissionTelemetryPageRo
             {

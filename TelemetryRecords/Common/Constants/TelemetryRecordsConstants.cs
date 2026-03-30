@@ -36,5 +36,10 @@ namespace TelemetryRecords.Common.Constants
         {
             public const int MaxPageSize = 2000;
         }
+
+        public static class TelemetryQuery
+        {
+            public const char FieldListSeparator = ',';
+        }
     }
 }
