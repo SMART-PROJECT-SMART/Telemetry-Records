@@ -1,0 +1,50 @@
+namespace TelemetryRecords.Common.Constants
+{
+    public static class TelemetryRecordsConstants
+    {
+        public static class Configuration
+        {
+            public const string MONGODB_CONFIG_SECTION = "MongoDbConfiguration";
+        }
+
+        public static class Collections
+        {
+            public const string ASSIGNMENTS_COLLECTION = "assignments";
+            public const string TELEMETRY_COLLECTION = "telemetry";
+        }
+
+        public static class Fields
+        {
+            public const string CREATED_AT = "CreatedAt";
+            public const string TIMESTAMP = "Timestamp";
+            public const string TELEMETRY_DATA_PREFIX = "TelemetryData";
+            public const string MISSION_ID_PATH = $"{TELEMETRY_DATA_PREFIX}.MissionId";
+        }
+
+        public static class ErrorMessages
+        {
+            public const string ASSIGNMENT_NOT_FOUND = "No assignment found.";
+            public const string ASSIGNMENT_NOT_FOUND_FOR_DATE = "No assignment found for date {0}.";
+            public const string INVALID_DATE_FORMAT = "Invalid date format. Use yyyy-MM-dd.";
+            public const string MISSION_ID_REQUIRED = "Mission ID is required.";
+            public const string MISSION_NOT_FOUND = "No mission found for the given ID.";
+            public const string TELEMETRY_PAGE_INVALID = "Page must be zero or greater.";
+            public const string TELEMETRY_PAGE_SIZE_INVALID = "Page size must be between zero and the maximum allowed.";
+        }
+
+        public static class TelemetryQueryLimits
+        {
+            public const int MaxPageSize = 2000;
+        }
+
+        public static class TelemetryQuery
+        {
+            public const char FieldListSeparator = ',';
+        }
+
+        public static class TelemetryAggregation
+        {
+            public const bool GroupAllDocumentsKey = true;
+        }
+    }
+}

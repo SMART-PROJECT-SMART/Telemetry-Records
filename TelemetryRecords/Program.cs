@@ -1,15 +1,14 @@
-var builder = WebApplication.CreateBuilder(args);
+using TelemetryRecords.Extensions;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddWebApi();
+builder.Services.AddAppConfiguration(builder.Configuration);
+builder.Services.AddMongoDbServices();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-app.UseAuthorization();
-
+app.UseRouting();
 app.MapControllers();
 
 app.Run();
